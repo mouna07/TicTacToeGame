@@ -55,7 +55,6 @@ public class TicTacToeGame {
         return board;
     }
 
-
     // UC5 make move to the given index
     public static void makeMove(char[] board, int userInput, char letterInput) {
         if (isBoardEmpty(board, userInput)) {
@@ -113,23 +112,23 @@ public class TicTacToeGame {
     }
 
     // UC8 computer plays
-    public static boolean computerPlay(char[] board, char computerLetter, char playerLetter) {
-        int index = 0;
-        index = winningPosition(board, computerLetter);
-        if (index != 0) {
-            board[index] = computerLetter;
+    public static boolean computerPlay(char[] board, char computerInput, char playerInput) {
+        int position = 0;
+        position = winningPosition(board, computerInput);
+        if (position != 0) {
+            board[position] = computerInput;
             return true;
         }
-        int blockIndex = denyWinOpponent(board, playerLetter);
+        int blockIndex = denyWinOpponent(board, playerInput);
         if (blockIndex != 0) {
-            board[blockIndex] = computerLetter;
+            board[blockIndex] = computerInput;
             return false;
         }
-        index = chooseCornerPosition(board);
-        if (index == 0) {
-            index = centerOrSides(board);
+        position = chooseCornerPosition(board);
+        if (position == 0) {
+            position = centerOrSides(board);
         }
-        board[index] = computerLetter;
+        board[position] = computerInput;
         return false;
     }
 
@@ -156,28 +155,28 @@ public class TicTacToeGame {
             return 5;
         int[] sides = { 2, 4, 6, 8 }; // side indexes
         for (int index = 0; index <= 3; index++)
-            if (isBoardEmpty(board, sides[index])) // checking board enpty or not
+            if (isBoardEmpty(board, sides[index])) // checking board empty or not
                 return index;
         return 0;
 
     }
 
     // UC12 Play game till the end
-    public static void playGameUntillItEnd(char[] board, char playerLetter, char computerLetter, Scanner userInput,
+    public static void playGameUntillItEnd(char[] board, char playerInput, char computerInput, Scanner userInputScanner,
                                            String firstPlayer) {
-        int toss = firstPlayer.equalsIgnoreCase("computer") ? 1 : 0;
+        int toss = firstPlayer.equalsIgnoreCase("Computer") ? 1 : 0;
         while (!checkTie(board)) {
             if (toss == 0) {
-                board = userInputMove(board, userInput, playerLetter);
+                board = userInputMove(board, userInputScanner, playerInput);
                 displayBoard(board);
-                if (isWinner(board, playerLetter)) {
+                if (isWinner(board, playerInput)) {
                     System.out.println("player is the winner");
                     return;
                 }
                 toss = 1;
             } else {
                 System.out.println("changing turn");
-                if (computerPlay(board, computerLetter, playerLetter)) {
+                if (computerPlay(board, computerInput, playerInput)) {
                     displayBoard(board);
                     System.out.println("computer is the winner");
                     return;
@@ -190,16 +189,20 @@ public class TicTacToeGame {
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the Tic Tac Toe Game Program");
-        char[] board = createBoard();
-        Scanner userInput = new Scanner(System.in);
-        char playerInput = getInput(userInput);
-        System.out.println("Player 1 choose : " + playerInput);
-        char computerInput = (playerInput == 'X')?'O':'X';
-        String playStarter = tossWhoStartsFirst();
-        System.out.println("Choose X or O");
-        displayBoard(board);
-        playGameUntillItEnd(board, playerInput, computerInput, userInput, playStarter);
+        Scanner userInputScanner = new Scanner(System.in);
+        int flag = 1;
+        while (flag == 1) {
+            System.out.println("Welcome to the Tic Tac Toe Game Program");
+            char[] board = createBoard();
+            char playerInput = getInput(userInputScanner);
+            System.out.println("Player 1 choose : " + playerInput);
+            char computerInput = (playerInput == 'X') ? 'O' : 'X';
+            String playStarter = tossWhoStartsFirst();
+            System.out.println("Choose X or O");
+            displayBoard(board);
+            playGameUntillItEnd(board, playerInput, computerInput, userInputScanner, playStarter);
+            flag = userInputScanner.nextInt();
+        }
 
     }
 }
