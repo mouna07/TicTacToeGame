@@ -6,10 +6,6 @@ public class TicTacToeGame {
     public static final int HEAD = 0;
     public static final int TAIL = 1;
 
-    public static enum Player {
-        player1, player2
-    };
-
     // created the board of given size
     public static char[] createBoard() {
         char[] board = new char[10];
@@ -53,29 +49,28 @@ public class TicTacToeGame {
         }
     }
 
-    // make move to the given index
-    public static void makeMove(char[] board, int index, char letterInput) {
-        if (isBoardEmpty(board, index)) {
-            board[index] = letterInput;
+    // UC5 make move to the given index
+    public static void makeMove(char[] board, int userInput, char letterInput) {
+        if (isBoardEmpty(board, userInput)) {
+            board[userInput] = letterInput;
         }
     }
 
     // UC6 Toss to decide who starts first
-    private static Player tossWhoStartsFirst() {
+    private static String tossWhoStartsFirst() {
         int tossResult = (int) (Math.floor(Math.random() * 10)) % 2;
         if (tossResult == HEAD) {
             System.out.println("player will start");
-            return Player.player1;
+            return "Player";
         } else {
             System.out.println("computer will start");
-            return Player.player2;
+            return "Computer";
         }
     }
 
     // UC7 Check the winner
     public static boolean isWinner(char[] board, char c) {
-        return ((board[1] == c && board[2] == c && board[3] == c)
-                || (board[4] == c && board[5] == c && board[6] == c)
+        return ((board[1] == c && board[2] == c && board[3] == c) || (board[4] == c && board[5] == c && board[6] == c)
                 || (board[7] == c && board[8] == c && board[9] == c)
                 || (board[1] == c && board[5] == c && board[9] == c)
                 || (board[3] == c && board[5] == c && board[7] == c)
@@ -84,17 +79,63 @@ public class TicTacToeGame {
                 || (board[3] == c && board[6] == c && board[9] == c));
     }
 
+    // check tie case
+    public static boolean checkTie(char[] board) {
+        for (int position = 0; position < 10; position++) {
+            if (board[position] == ' ') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // UC8 computer plays
+    public static boolean computerTurn(char[] board, char computerInput) {
+        for (int position = 1; position < 10; position++) {
+            if (isBoardEmpty(board, position)) {
+                board[position] = computerInput;
+                if (isWinner(board, computerInput))
+                    return true;
+                else
+                    board[position] = ' ';
+            }
+        }
+
+        int position = (int) (Math.random() * 9) + 1;
+        while (!isBoardEmpty(board, position)) {
+            position = (int) (Math.random() * 9) + 1;
+        }
+        board[position] = computerInput;
+        displayBoard(board);
+        return false;
+    }
+
     public static void main(String[] args) {
         System.out.println("Welcome to the Tic Tac Toe Game Program");
         Scanner userInput = new Scanner(System.in);
-        char givenInput = userInput.next().charAt(0);
         char[] board = createBoard();
-        char getLetterInput = getInput((givenInput) == 'X' ? 'O' : 'X');
+        String playStarter = tossWhoStartsFirst();
+        char playerInput = userInput.next().charAt(0);
+        char computerInput = getInput((playerInput) == 'X' ? 'O' : 'X');
         displayBoard(board);
         int userMove = getUserMove(board, userInput);
-        displayBoard(board);
-        makeMove(board, userMove, getLetterInput);
-        Player playStarter = tossWhoStartsFirst();
-        isWinner(board, getLetterInput);
+        makeMove(board, userMove, playerInput);
+        // checked if the player won
+        if (isWinner(board, playerInput)) {
+            System.out.println("player is the winner");
+            return;
+        }
+        // computer's turn to move
+        if (computerTurn(board, computerInput)) {
+            System.out.println("computer is the winner");
+            return;
+        }
+
+        if (checkTie(board) == true) {
+            System.out.println("It's a Tie");
+        } else {
+            System.out.println("Change the Turn");
+        }
     }
+
 }
