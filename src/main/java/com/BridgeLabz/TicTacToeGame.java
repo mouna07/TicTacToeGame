@@ -3,6 +3,7 @@ package com.BridgeLabz;
 import java.util.Scanner;
 
 public class TicTacToeGame {
+
     // created the board of given size
     public static char[] createBoard() {
         char[] board = new char[10];
@@ -26,28 +27,43 @@ public class TicTacToeGame {
         System.out.println(board[7] + " | " + board[8] + " |" + " " + board[9]);
     }
 
-    public static boolean checkPosition(char[] board, Scanner input) {
-        System.out.println("Enter the User Input");
-        int userInput = input.nextInt();
-        boolean flag = true;
-        while(flag) {
-            if(board[userInput] == ' ') {
-                return flag;
+    // UC4 check if board Empty or not
+    public static boolean isBoardEmpty(char[] board, int index) {
+        return board[index] == ' ';
+    }
+
+    // UC4 checks whether the space available or occupied returns index
+    public static int getUserMove(char[] board, Scanner getInput) {
+        while (true) {
+            System.out.println("Enter the index you want to move");
+            int index = getInput.nextInt();
+            if ((index > 0 && index < 10) && isBoardEmpty(board, index)) {
+                return index;
+            } else if ((index <= 0 && index >= 10)) {
+                System.out.println("Invalid Index Try Again!!!");
+            } else {
+                System.out.println("Already Occupied");
             }
         }
-        return false;
+    }
+
+    // make move to the given index
+    public static void makeMove(char[] board, int index, char letterInput) {
+        if (isBoardEmpty(board, index)) {
+            board[index] = letterInput;
+        }
     }
 
     public static void main(String[] args) {
         System.out.println("Welcome to the Tic Tac Toe Game Program");
-        Scanner input = new Scanner(System.in);
-        char givenInput = input.next().charAt(0);
+        Scanner userInput = new Scanner(System.in);
+        char givenInput = userInput.next().charAt(0);
         char[] board = createBoard();
-        char chosenLetter = getInput((getInput(givenInput) == 'X' ? 'O' : 'X'));
+        char getLetterInput = getInput((givenInput) == 'X' ? 'O' : 'X');
         displayBoard(board);
-        boolean isEmpty = checkPosition(board, input);
-        if(isEmpty){
-            displayBoard(board);
-        }
+        int userMove = getUserMove(board, userInput);
+        displayBoard(board);
+        makeMove(board, userMove, getLetterInput);
+        displayBoard(board);
     }
 }
