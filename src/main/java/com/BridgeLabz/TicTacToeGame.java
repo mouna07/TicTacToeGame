@@ -3,6 +3,12 @@ package com.BridgeLabz;
 import java.util.Scanner;
 
 public class TicTacToeGame {
+    public static final int HEAD = 0;
+    public static final int TAIL = 1;
+
+    public static enum Player {
+        player1, player2
+    };
 
     // created the board of given size
     public static char[] createBoard() {
@@ -54,6 +60,18 @@ public class TicTacToeGame {
         }
     }
 
+    // UC6 Toss to decide who starts first
+    private static Player tossWhoStartsFirst() {
+        int tossResult = (int) (Math.floor(Math.random() * 10)) % 2;
+        if (tossResult == HEAD) {
+            System.out.println("player will start");
+            return Player.player1;
+        } else {
+            System.out.println("computer will start");
+            return Player.player2;
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println("Welcome to the Tic Tac Toe Game Program");
         Scanner userInput = new Scanner(System.in);
@@ -65,5 +83,6 @@ public class TicTacToeGame {
         displayBoard(board);
         makeMove(board, userMove, getLetterInput);
         displayBoard(board);
+        Player player = tossWhoStartsFirst();
     }
 }
