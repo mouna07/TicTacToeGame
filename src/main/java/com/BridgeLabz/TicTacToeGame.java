@@ -72,6 +72,18 @@ public class TicTacToeGame {
         }
     }
 
+    // UC7 Check the winner
+    public static boolean isWinner(char[] board, char c) {
+        return ((board[1] == c && board[2] == c && board[3] == c)
+                || (board[4] == c && board[5] == c && board[6] == c)
+                || (board[7] == c && board[8] == c && board[9] == c)
+                || (board[1] == c && board[5] == c && board[9] == c)
+                || (board[3] == c && board[5] == c && board[7] == c)
+                || (board[1] == c && board[4] == c && board[7] == c)
+                || (board[2] == c && board[5] == c && board[8] == c)
+                || (board[3] == c && board[6] == c && board[9] == c));
+    }
+
     public static void main(String[] args) {
         System.out.println("Welcome to the Tic Tac Toe Game Program");
         Scanner userInput = new Scanner(System.in);
@@ -82,7 +94,7 @@ public class TicTacToeGame {
         int userMove = getUserMove(board, userInput);
         displayBoard(board);
         makeMove(board, userMove, getLetterInput);
-        displayBoard(board);
-        Player player = tossWhoStartsFirst();
+        Player playStarter = tossWhoStartsFirst();
+        isWinner(board, getLetterInput);
     }
 }
